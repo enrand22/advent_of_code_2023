@@ -1,18 +1,25 @@
 defmodule Day1 do
-  @moduledoc """
-  Documentation for `Day1`.
-  """
 
-  @doc """
-  Hello world.
+  def read_input do
+    File.stream!("input.txt")
+    |> Enum.map(&(proccess_line/1))
+    |> Enum.sum()
+  end
 
-  ## Examples
+  def proccess_line(line) do
+    list = line
+    |> String.trim()
+    |> String.replace(~r/[^\d]/, "")
+    |> String.graphemes()
 
-      iex> Day1.hello()
-      :world
+    [Enum.take(list, 1), Enum.take(list, -1)]
+    |> Enum.flat_map(fn x -> x end)
+    |> Enum.map(&parse_int/1)
+    |> Enum.sum()
+  end
 
-  """
-  def hello do
-    :world
+  def parse_int(v) do
+    Integer.parse(v)
+    |> Kernel.elem(0)
   end
 end
