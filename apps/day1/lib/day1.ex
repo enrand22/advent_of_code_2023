@@ -14,8 +14,8 @@ defmodule Day1 do
 
     [Enum.take(list, 1), Enum.take(list, -1)]
     |> Enum.flat_map(fn x -> x end)
-    |> Enum.map(&parse_int/1)
-    |> Enum.sum()
+    |> Enum.join("")
+    |> parse_int()
   end
 
   def parse_int(v) do
