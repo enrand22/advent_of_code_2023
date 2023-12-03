@@ -1,16 +1,20 @@
 defmodule Day1 do
 
   def task1 do
-    File.stream!("input.txt")
+    input()
     |> Enum.map(&(proccess_line/1))
     |> Enum.sum()
   end
 
   def task2 do
-    File.stream!("input.txt")
+    input()
     |> Enum.map(&(replace_spelt_numbers/1))
     |> Enum.map(&(proccess_line/1))
     |> Enum.sum()
+  end
+
+  def input do
+    File.stream!("../inputs/day1.txt")
   end
 
   def replace_spelt_numbers("one" <> rest), do: "1" <> replace_spelt_numbers("e" <> rest)
