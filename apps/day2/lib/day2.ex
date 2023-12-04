@@ -3,16 +3,19 @@ defmodule Day2 do
   def task1 do
     input()
     |> Enum.map(&(process_line/1))
-    # |> Enum.map(&sum_values/1)
-    # |> Enum.filter(fn {_id, %{"red" => red, "blue" => blue, "green" => green}} -> red <= 12 && green <= 13 && blue <= 14 end )
-
     |> Enum.filter(fn {_id, game} -> Enum.all?(matching_color(game))  end )
     |> Enum.map(fn {id, _} -> id end)
     |> Enum.sum()
   end
 
-  def matching_color(game) do
+  def task2 do
+    input()
+    |> Enum.map(&(process_line/1))
+    |> Enum.map(&sum_values/1)
+    |> Enum.sum()
+  end
 
+  def matching_color(game) do
     Enum.flat_map(game, fn sets -> Enum.map(sets, fn set ->
       case set do
         {"blue", blue} -> blue <= 14
@@ -20,18 +23,17 @@ defmodule Day2 do
         {"green", green} -> green <= 13
       end
     end) end)
-
   end
 
-  def sum_values(game) do
-    { game_id , sets} = game
-
+  def sum_values({_, sets}) do
     colors = %{"red" => 0, "blue" => 0, "green" => 0}
 
-    colors = sets
-    |> Enum.map_reduce(colors, fn {color, value}, colors -> {value , elem(Map.get_and_update(colors, color, fn old_value  ->  {old_value, old_value + value} end), 1) }  end)
-
-    {game_id, elem(colors, 1)}
+    sets
+    |> Enum.flat_map(fn set -> set end)
+    |> Enum.map_reduce(colors, fn {color, value}, colors -> {value , elem(Map.get_and_update(colors, color, fn old_value  ->  {old_value, Kernel.max(old_value, value)} end), 1) }  end)
+    |> elem(1)
+    |> Map.values()
+    |> Enum.product()
   end
 
   def process_line(line) do
